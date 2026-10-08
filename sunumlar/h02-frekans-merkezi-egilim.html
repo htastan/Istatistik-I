@@ -29,10 +29,12 @@
       vertical-align: middle;
     }
   </style>
-  <link rel="stylesheet" href="h02-frekans-merkezi-egilim_files/libs/revealjs/dist/theme/quarto-7c82f6763972d782fea1fe054fdae21d.css">
+  <link rel="stylesheet" href="h02-frekans-merkezi-egilim_files/libs/revealjs/dist/theme/quarto-4604981e06d90a847b0892b3198a7afa.css">
   <link href="h02-frekans-merkezi-egilim_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="h02-frekans-merkezi-egilim_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="h02-frekans-merkezi-egilim_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="h02-frekans-merkezi-egilim_files/libs/revealjs/plugin/reveal-chalkboard/font-awesome/css/all.css" rel="stylesheet">
+  <link href="h02-frekans-merkezi-egilim_files/libs/revealjs/plugin/reveal-chalkboard/style.css" rel="stylesheet">
   <link href="h02-frekans-merkezi-egilim_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
   <style type="text/css">
     .reveal div.sourceCode {
@@ -147,8 +149,8 @@ Prof.&nbsp;Dr.&nbsp;Hüseyin Taştan
 <h2>Bu derste</h2>
 <ol type="1">
 <li>Kategorik değişkenler: frekans tablosu, çubuk çizimi, çapraz tablo</li>
-<li>Sayısal değişkenler: frekans tablosunu elle kurmak, histogram, poligon ve ogive, dağılımın biçimi</li>
-<li>Merkezi eğilim ölçüleri: ortalama, medyan, mod</li>
+<li>Sayısal değişkenler: dal-yaprak çizimi, frekans tablosunu elle kurmak, histogram, poligon ve ogive, dağılımın biçimi, zaman serisi grafikleri</li>
+<li>Merkezi eğilim ölçüleri: ortalama, ağırlıklı ve geometrik ortalama, medyan, mod</li>
 <li>Sıra istatistikleri, kartiller ve yüzdelikler</li>
 </ol>
 <p><br></p>
@@ -314,6 +316,116 @@ Cinsiyet Ailesiyle Yurtta Evde
 <h1>Sayısal değişkenler</h1>
 
 </section>
+<section id="dal-yaprak-çizimi" class="slide level2">
+<h2>Dal-yaprak çizimi</h2>
+<p>Kağıt kalemle hızlıca çizilen ve <strong>değerleri kaybetmeyen</strong> bir dağılım resmi.</p>
+<div class="columns">
+<div class="column" style="width:58%;">
+<p>13 öğrencinin sınav notu:</p>
+<p>48, 55, 87, 58, 63, 75, 95, 68, 75, 80, 60, 52, 66</p>
+<ul>
+<li class="fragment">Her sayıyı ikiye ayır. Onlar basamağı <strong>dal</strong>, birler basamağı <strong>yaprak</strong>. 75’in dalı 7, yaprağı 5.</li>
+<li class="fragment">Dalları küçükten büyüğe alt alta yaz, yanlarına dikey bir çizgi çek.</li>
+<li class="fragment">Her gözlemin yaprağını kendi dalının satırına küçükten büyüğe yaz.</li>
+</ul>
+</div><div class="column" style="width:42%;">
+<div class="fragment">
+<pre class="dal-yaprak">4 | 8
+5 | 2 5 8
+6 | 0 3 6 8
+7 | 5 5
+8 | 0 7
+9 | 5</pre>
+<div class="not">
+<p>Okuma: <code>7 | 5</code> = 75</p>
+</div>
+</div>
+</div></div>
+<div class="fragment">
+<p>Her satırdaki yaprak sayısı o daldaki gözlem sayısıdır. Satırların uzunluğu dağılımın biçimini gösterir. Yan yatırılmış bir histogram gibidir, ama her not hâlâ okunabilir.</p>
+</div>
+<aside class="notes">
+<p>Bir öğrenci 48, üç öğrenci 50’li, dört öğrenci 60’lı not almış. 75 alan iki öğrenci var, en yüksek not 95.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="dal-yaprak-r-çıktısını-okumak" class="slide level2">
+<h2>Dal-yaprak: <code>R</code> çıktısını okumak</h2>
+<div class="columns">
+<div class="column" style="width:45%;">
+<p>81 ilde mutluluk endeksi, <code>stem()</code> çıktısı:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+  The decimal point is 1 digit(s) to the right of the |
+
+  4 | 2
+  4 | 69
+  5 | 0012222333344
+  5 | 56677777778888889999
+  6 | 0000011111123334444
+  6 | 55555666788
+  7 | 00011122344
+  7 | 5668</code></pre>
+</div>
+</div>
+</div><div class="column" style="width:55%;">
+<div class="tahmin">
+<ol type="a">
+<li>En düşük ve en yüksek endeks yaklaşık kaçtır?</li>
+<li>Her dal neden iki satırda yazılmış?</li>
+<li>En kalabalık satır hangisi, kaç il içeriyor?</li>
+</ol>
+</div>
+<div class="fragment">
+<p><strong>Yanıtlar:</strong> (a) 42 ve 78. (b) Birinci satır 0-4, ikinci satır 5-9 yapraklarını taşır. Satır sayısını <code>R</code> veriye bakarak kendisi seçer. (c) <code>5 | 5…9</code> satırı, 20 il. Bu illerin endeksi yaklaşık 55 ile 59 arasında.</p>
+</div>
+</div></div>
+<div class="not">
+<p>“The decimal point is 1 digit(s) to the right of the |”: ondalık nokta çizginin bir basamak sağında, yani <code>4 | 2</code> = 42. Değerler tam sayıya yuvarlanmıştır (41.98 → 42).</p>
+</div>
+</section>
+<section id="dal-yaprak-çiziminden-frekans-tablosuna" class="slide level2">
+<h2>Dal-yaprak çiziminden frekans tablosuna</h2>
+<p>20 öğrencinin sınav notu, dal-yaprak çizimiyle:</p>
+<div class="columns">
+<div class="column" style="width:40%;">
+<pre class="dal-yaprak">4 | 3 7
+5 | 2 5 8
+6 | 1 3 4 6 8 9
+7 | 1 3 4 7 9
+8 | 2 5 8
+9 | 3</pre>
+</div><div class="column" style="width:60%;">
+<ul>
+<li class="fragment">Her satırın yapraklarını sayalım: 2, 3, 6, 5, 3, 1. Bunlar 40’lı, 50’li, …, 90’lı notların sayısıdır.</li>
+<li class="fragment">Bu sayılar genişliği 10 olan sınıfların <strong>frekanslarıdır</strong>. Dal-yaprak çizimi hem frekansları hem de değerlerin kendisini gösterir.</li>
+<li class="fragment">Gözlem sayısı yüzlerle ölçülünce satırlar çok uzar. O zaman değerleri bırakıp yalnız frekansları tutarız. Bu, <strong>frekans tablosudur</strong>.</li>
+</ul>
+</div></div>
+<aside class="notes">
+<p>Sonraki slaytlarda aynı 20 notun frekans tablosu çetele tutularak kurulur, sonra histogramı çizilir. Dal-yaprak çizimi veriyi sıralanmış olarak da verir, frekans tablosunu kurmanın ilk adımı olan sıralama böylece hazırdır.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
 <section id="sayısal-veri-frekans-tablosunu-elle-kurmak" class="slide level2">
 <h2>Sayısal veri: frekans tablosunu elle kurmak</h2>
 <p>20 öğrencinin sınav notu:</p>
@@ -324,7 +436,7 @@ Cinsiyet Ailesiyle Yurtta Evde
 <ol type="1">
 <li class="fragment"><strong>Sırala.</strong> Veriyi küçükten büyüğe diz. En küçük ve en büyük değeri, dolayısıyla veri aralığını böylece görürsün. Yukarıdaki notlar sıralı verilmiştir, ham veri ise genelde karışık gelir.</li>
 <li class="fragment"><strong>Sınırları belirle.</strong> En küçük 43, en büyük 93. Genişliği 10 olan sınıflar 40’tan 100’e kadar veriyi kapsar.</li>
-<li class="fragment"><strong>Çetele tut.</strong> Her gözlemi ait olduğu sınıfa bir çizgi olarak yaz. Listeyi bir kez baştan sona gez.</li>
+<li class="fragment"><strong>Çetele tut.</strong> Her gözlemi ait olduğu sınıfa bir çizgi olarak yaz. Beşinci çizgiyi önceki dördünün üstünden çapraz çek, beşerli gruplar kolay sayılır. Listeyi bir kez baştan sona gez.</li>
 <li class="fragment"><strong>Sütunları doldur.</strong> Frekans, göreli frekans ve birikimli frekans.</li>
 </ol>
 </section>
@@ -333,6 +445,11 @@ Cinsiyet Ailesiyle Yurtta Evde
 <div class="columns">
 <div class="column" style="width:42%;">
 <table class="caption-top">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
 <thead>
 <tr class="header">
 <th style="text-align: left;">Sınıf</th>
@@ -343,32 +460,32 @@ Cinsiyet Ailesiyle Yurtta Evde
 <tbody>
 <tr class="odd">
 <td style="text-align: left;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">[</mo><mn>40</mn><mo>,</mo><mn>50</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">[40,50)</annotation></semantics></math></td>
-<td style="text-align: left;">||</td>
+<td style="text-align: left;"><span class="cetele">||</span></td>
 <td style="text-align: right;">2</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">[</mo><mn>50</mn><mo>,</mo><mn>60</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">[50,60)</annotation></semantics></math></td>
-<td style="text-align: left;">|||</td>
+<td style="text-align: left;"><span class="cetele">|||</span></td>
 <td style="text-align: right;">3</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">[</mo><mn>60</mn><mo>,</mo><mn>70</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">[60,70)</annotation></semantics></math></td>
-<td style="text-align: left;">|||| |</td>
+<td style="text-align: left;"><span class="cetele"><span class="bes">||||</span>|</span></td>
 <td style="text-align: right;">6</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">[</mo><mn>70</mn><mo>,</mo><mn>80</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">[70,80)</annotation></semantics></math></td>
-<td style="text-align: left;">||||</td>
+<td style="text-align: left;"><span class="cetele"><span class="bes">||||</span></span></td>
 <td style="text-align: right;">5</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">[</mo><mn>80</mn><mo>,</mo><mn>90</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">[80,90)</annotation></semantics></math></td>
-<td style="text-align: left;">|||</td>
+<td style="text-align: left;"><span class="cetele">|||</span></td>
 <td style="text-align: right;">3</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">[</mo><mn>90</mn><mo>,</mo><mn>100</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">[90,100)</annotation></semantics></math></td>
-<td style="text-align: left;">|</td>
+<td style="text-align: left;"><span class="cetele">|</span></td>
 <td style="text-align: right;">1</td>
 </tr>
 </tbody>
@@ -458,7 +575,7 @@ Cinsiyet Ailesiyle Yurtta Evde
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="h02-frekans-merkezi-egilim_files/figure-revealjs/unnamed-chunk-8-1.png" style="width:100.0%"></p>
+<p><img data-src="h02-frekans-merkezi-egilim_files/figure-revealjs/unnamed-chunk-10-1.png" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
@@ -497,7 +614,7 @@ Cinsiyet Ailesiyle Yurtta Evde
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="h02-frekans-merkezi-egilim_files/figure-revealjs/unnamed-chunk-9-1.png" style="width:100.0%"></p>
+<p><img data-src="h02-frekans-merkezi-egilim_files/figure-revealjs/unnamed-chunk-11-1.png" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
@@ -539,7 +656,7 @@ Cinsiyet Ailesiyle Yurtta Evde
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="h02-frekans-merkezi-egilim_files/figure-revealjs/unnamed-chunk-11-1.png" style="width:100.0%"></p>
+<p><img data-src="h02-frekans-merkezi-egilim_files/figure-revealjs/unnamed-chunk-13-1.png" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
@@ -569,7 +686,7 @@ Cinsiyet Ailesiyle Yurtta Evde
 <section id="sınıf-sayısı-görüntüyü-değiştirir" class="slide level2">
 <h2>Sınıf sayısı görüntüyü değiştirir</h2>
 
-<img data-src="h02-frekans-merkezi-egilim_files/figure-revealjs/unnamed-chunk-12-1.png" style="width:100.0%" class="r-stretch"><ul>
+<img data-src="h02-frekans-merkezi-egilim_files/figure-revealjs/unnamed-chunk-14-1.png" style="width:100.0%" class="r-stretch"><ul>
 <li><strong>Çok az sınıf:</strong> dağılımın biçimi kaybolur. <strong>Çok fazla sınıf:</strong> boşluklar ve rassal inişler çıkışlar.</li>
 <li>Bir başlangıç önerisi, <strong>Sturges kuralı</strong>: sınıf sayısı <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>=</mo><mn>1</mn><mo>+</mo><msub><mo>log</mo><mn>2</mn></msub><mi>n</mi></mrow><annotation encoding="application/x-tex">= 1 + \log_2 n</annotation></semantics></math>, yukarı yuvarlanır. 81 il için <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>+</mo><mn>6.34</mn><mo>=</mo><mn>7.34</mn></mrow><annotation encoding="application/x-tex">1 + 6.34 = 7.34</annotation></semantics></math>, yani 8 sınıf.</li>
 </ul>
@@ -630,7 +747,7 @@ Cinsiyet Ailesiyle Yurtta Evde
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="h02-frekans-merkezi-egilim_files/figure-revealjs/unnamed-chunk-14-1.png" style="width:100.0%"></p>
+<p><img data-src="h02-frekans-merkezi-egilim_files/figure-revealjs/unnamed-chunk-16-1.png" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
@@ -669,7 +786,7 @@ Cinsiyet Ailesiyle Yurtta Evde
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="h02-frekans-merkezi-egilim_files/figure-revealjs/unnamed-chunk-15-1.png" style="width:100.0%"></p>
+<p><img data-src="h02-frekans-merkezi-egilim_files/figure-revealjs/unnamed-chunk-17-1.png" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
@@ -702,7 +819,7 @@ Cinsiyet Ailesiyle Yurtta Evde
 <section id="sınıfları-daraltırsak" class="slide level2">
 <h2>Sınıfları daraltırsak</h2>
 
-<img data-src="h02-frekans-merkezi-egilim_files/figure-revealjs/unnamed-chunk-16-1.png" style="width:100.0%" class="r-stretch"><div class="kucuk">
+<img data-src="h02-frekans-merkezi-egilim_files/figure-revealjs/unnamed-chunk-18-1.png" style="width:100.0%" class="r-stretch"><div class="kucuk">
 <p>20.000 hanenin aylık harcaması. Dikey eksen üç panelde de aynı, değişen yalnız sınıf genişliği.</p>
 </div>
 <ul>
@@ -731,7 +848,7 @@ Cinsiyet Ailesiyle Yurtta Evde
 <section id="dağılımın-biçimi-simetri-ve-çarpıklık" class="slide level2">
 <h2>Dağılımın biçimi: simetri ve çarpıklık</h2>
 
-<img data-src="h02-frekans-merkezi-egilim_files/figure-revealjs/unnamed-chunk-17-1.png" style="width:100.0%" class="r-stretch"><ul>
+<img data-src="h02-frekans-merkezi-egilim_files/figure-revealjs/unnamed-chunk-19-1.png" style="width:100.0%" class="r-stretch"><ul>
 <li><strong>Sola çarpık</strong> (uzun kuyruk solda): kolay bir sınavda notlar</li>
 <li><strong>Simetrik</strong> (iki kuyruk benzer): tek cinsiyet içinde yetişkin boyu</li>
 <li><strong>Sağa çarpık</strong> (uzun kuyruk sağda): gelir, harcama, ev fiyatları</li>
@@ -740,12 +857,12 @@ Cinsiyet Ailesiyle Yurtta Evde
 <section id="gerçek-veri-hane-geliri-sağa-çarpık" class="slide level2">
 <h2>Gerçek veri: hane geliri sağa çarpık</h2>
 
-<img data-src="h02-frekans-merkezi-egilim_files/figure-revealjs/unnamed-chunk-18-1.png" style="width:100.0%" class="r-stretch"><p>Hanelerin çoğu düşük ve orta gelir düzeyinde toplanmış; az sayıda hanenin geliri çok yüksek ve sağ kuyruğu uzatıyor.</p>
+<img data-src="h02-frekans-merkezi-egilim_files/figure-revealjs/unnamed-chunk-20-1.png" style="width:100.0%" class="r-stretch"><p>Hanelerin çoğu düşük ve orta gelir düzeyinde toplanmış; az sayıda hanenin geliri çok yüksek ve sağ kuyruğu uzatıyor.</p>
 </section>
 <section id="tepe-sayısı-iki-grup-bir-arada" class="slide level2">
 <h2>Tepe sayısı: iki grup bir arada</h2>
 
-<img data-src="h02-frekans-merkezi-egilim_files/figure-revealjs/unnamed-chunk-20-1.png" style="width:100.0%" class="r-stretch"><div class="tahmin">
+<img data-src="h02-frekans-merkezi-egilim_files/figure-revealjs/unnamed-chunk-22-1.png" style="width:100.0%" class="r-stretch"><div class="tahmin">
 <p>Soldaki histogramda neden <strong>iki tepe</strong> var?</p>
 </div>
 <aside class="notes">
@@ -761,6 +878,60 @@ Cinsiyet Ailesiyle Yurtta Evde
           overflow: hidden!important;
           display:block!important;
       }</style></aside>
+</section>
+<section id="sıra-önemliyse-zaman-serisi-grafiği" class="slide level2">
+<h2>Sıra önemliyse: zaman serisi grafiği</h2>
+
+<img data-src="h02-frekans-merkezi-egilim_files/figure-revealjs/unnamed-chunk-24-1.png" style="width:100.0%" class="r-stretch"><p>Bir kafenin 36 aylık satış geliri, iki grafikte aynı 36 sayı.</p>
+<ul>
+<li>Histogram gözlemlerin <strong>sırasını görmez</strong>. Ayları karıştırsak histogram değişmez.</li>
+<li>Zaman serisinde sıra bilginin kendisidir. Yatay eksende zaman, dikey eksende ölçüm yer alır ve noktalar birleştirilir.</li>
+</ul>
+</section>
+<section id="zaman-serisi-grafiğinde-neye-bakarız" class="slide level2">
+<h2>Zaman serisi grafiğinde neye bakarız?</h2>
+<ul>
+<li class="fragment"><strong>Eğilim (trend).</strong> Seri uzun dönemde yükseliyor mu, düşüyor mu, yoksa bir düzey etrafında mı dalgalanıyor?</li>
+<li class="fragment"><strong>Mevsimsellik.</strong> Yıl içinde düzenli tekrarlayan bir örüntü var mı? Perakende satışlar bayram ve yılbaşında, turizm gelirleri yaz aylarında yükselir.</li>
+<li class="fragment"><strong>Oynaklık ve kırılmalar.</strong> Dalgalanmanın şiddeti zamanla değişiyor mu? Serinin düzeyinde ani bir sıçrama ya da düşüş var mı? Finansal getirilerde oynaklık zamanla değişir, rejim ve politika değişiklikleri yapısal kırılmalara yol açabilir.</li>
+</ul>
+</section>
+<section id="bir-kafenin-aylık-satışları" class="slide level2">
+<h2>Bir kafenin aylık satışları</h2>
+
+<img data-src="h02-frekans-merkezi-egilim_files/figure-revealjs/unnamed-chunk-25-1.png" style="width:100.0%" class="r-stretch"><ul>
+<li class="fragment"><strong>Eğilim:</strong> aylık ortalama 2022’de 134.5, 2024’te 172.9 bin TL.</li>
+<li class="fragment"><strong>Mevsimsellik:</strong> halkalı temmuzlar her yıl üstte, ocak ve şubat dipte. 2023’te tepe ağustosta, rastlantı tepeyi bir ay kaydırabilir.</li>
+<li class="fragment"><strong>Oynaklık:</strong> dalgalanmanın şiddeti üç yıl boyunca benzer.</li>
+</ul>
+<div class="fragment">
+<div class="tahmin">
+<p>2024 temmuzunda 207 bin TL satış yapıldı. Bu olağanüstü bir ay mı?</p>
+</div>
+</div>
+<aside class="notes">
+<p>Hayır. Hem yükselen eğilimin hem de her yıl tekrarlayan yaz artışının sonucudur, yani beklenen bir değerdir. Seriye tek başına bakan biri bu sayıyı olağanüstü sanabilir.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="günlük-veri-haftalık-mevsimsellik-ve-bir-kampanya" class="slide level2">
+<h2>Günlük veri: haftalık mevsimsellik ve bir kampanya</h2>
+
+<img data-src="h02-frekans-merkezi-egilim_files/figure-revealjs/unnamed-chunk-27-1.png" style="width:100.0%" class="r-stretch"><p>Bir e-ticaret şirketinin günlük sipariş sayısı (gri) ve 7 günlük hareketli ortalama (siyah).</p>
+<ul>
+<li class="fragment"><strong>Eğilim:</strong> günlük ortalama ocakta 44, ekimde 57 sipariş.</li>
+<li class="fragment"><strong>Haftalık mevsimsellik:</strong> küçük dişler. Pazar ortalaması 68, salı ortalaması 47 sipariş. Hareketli ortalama bu dişleri düzleştirir.</li>
+<li class="fragment"><strong>Kırılma:</strong> kasım sonundaki indirim kampanyası seride belirgin bir sıçrama yaratır, kampanya bitince seri eğilimine döner.</li>
+</ul>
 </section></section>
 <section>
 <section id="merkezi-eğilim" class="title-slide slide level1 center">
@@ -841,8 +1012,181 @@ Cinsiyet Ailesiyle Yurtta Evde
 <li>Ağırlıklı ortalama: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac displaystyle="true"><mrow><mn>3</mn><mo>⋅</mo><mn>80</mn><mo>+</mo><mn>5</mn><mo>⋅</mo><mn>60</mn><mo>+</mo><mn>2</mn><mo>⋅</mo><mn>90</mn></mrow><mrow><mn>3</mn><mo>+</mo><mn>5</mn><mo>+</mo><mn>2</mn></mrow></mfrac><mo>=</mo><mfrac displaystyle="true"><mn>720</mn><mn>10</mn></mfrac><mo>=</mo><mn>72</mn></mrow><annotation encoding="application/x-tex">\dfrac{3\cdot 80 + 5\cdot 60 + 2\cdot 90}{3 + 5 + 2} = \dfrac{720}{10} = 72</annotation></semantics></math></li>
 </ul>
 <p>Kredisi en yüksek dersteki not düşük olduğu için ağırlıklı ortalama daha düşük. Bütün ağırlıklar eşitse ikisi aynıdır.</p>
-<!-- Gerektirir: hane_ornek (b04-gorsel/_kategorik.qmd) -->
 </div>
+</section>
+<section id="büyüme-oranlarının-ortalaması" class="slide level2">
+<h2>Büyüme oranlarının ortalaması</h2>
+<div class="tahmin">
+<p>100 TL’lik bir hisse senedi birinci yıl %50 değer kazanıyor, ikinci yıl %50 değer kaybediyor. Ortalama yıllık getiri %0 mıdır? İki yıl sonra senedin değeri kaç TL’dir?</p>
+</div>
+<div class="fragment">
+<ul>
+<li>Birinci yıl sonunda <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>100</mn><mo>×</mo><mn>1.5</mn><mo>=</mo><mn>150</mn></mrow><annotation encoding="application/x-tex">100 \times 1.5 = 150</annotation></semantics></math> TL, ikinci yıl sonunda <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>150</mn><mo>×</mo><mn>0.5</mn><mo>=</mo><mn>75</mn></mrow><annotation encoding="application/x-tex">150 \times 0.5 = 75</annotation></semantics></math> TL</li>
+<li>Aritmetik ortalama <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="false" form="prefix">(</mo><mn>50</mn><mo>−</mo><mn>50</mn><mo stretchy="false" form="postfix">)</mo></mrow><mi>/</mi><mn>2</mn><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">(50 - 50)/2 = 0</annotation></semantics></math> diyor, oysa yatırımcı parasının dörtte birini kaybetti</li>
+</ul>
+</div>
+<div class="fragment">
+<p>Oranlar toplanarak değil <strong>çarpılarak</strong> birikir. Bu yüzden ortalamaları da çarpımdan hesaplanmalıdır.</p>
+</div>
+</section>
+<section id="geometrik-ortalama" class="slide level2">
+<h2>Geometrik ortalama</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Pozitif değerler için</strong> <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mover><mi>x</mi><mo accent="true">‾</mo></mover><mi>g</mi></msub><mo>=</mo><msup><mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>x</mi><mn>1</mn></msub><mo>⋅</mo><msub><mi>x</mi><mn>2</mn></msub><mi>⋯</mi><msub><mi>x</mi><mi>n</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><mrow><mn>1</mn><mi>/</mi><mi>n</mi></mrow></msup><mo>=</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><munderover><mo>∏</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><msub><mi>x</mi><mi>i</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mn>1</mn><mi>/</mi><mi>n</mi></mrow></msup></mrow><annotation encoding="application/x-tex">
+\bar{x}_g = \left(x_1 \cdot x_2 \cdots x_n\right)^{1/n} = \left(\prod_{i=1}^{n} x_i\right)^{1/n}
+</annotation></semantics></math></p>
+<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mo>∏</mo><annotation encoding="application/x-tex">\prod</annotation></semantics></math> çarpım işlemcisidir, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mo>∑</mo><annotation encoding="application/x-tex">\sum</annotation></semantics></math>’nın çarpmadaki karşılığı.</p>
+</div><div class="column" style="width:50%;">
+<p><strong>Büyüme ve getiri oranları için</strong> <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>g</mi><mo accent="true">‾</mo></mover><mo>=</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><munderover><mo>∏</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mrow><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>+</mo><msub><mi>g</mi><mi>i</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mn>1</mn><mi>/</mi><mi>n</mi></mrow></msup><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">
+\bar{g} = \left(\prod_{i=1}^{n} (1 + g_i)\right)^{1/n} - 1
+</annotation></semantics></math></p>
+<p>Oranlar negatif olabildiği için 1 eklenmiş hâlleri çarpılır.</p>
+</div></div>
+<div class="fragment">
+<p>Hisse senedi örneğinde <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>g</mi><mo accent="true">‾</mo></mover><mo>=</mo><msup><mrow><mo stretchy="false" form="prefix">(</mo><mn>1.5</mn><mo>×</mo><mn>0.5</mn><mo stretchy="false" form="postfix">)</mo></mrow><mrow><mn>1</mn><mi>/</mi><mn>2</mn></mrow></msup><mo>−</mo><mn>1</mn><mo>=</mo><msqrt><mn>0.75</mn></msqrt><mo>−</mo><mn>1</mn><mo>=</mo><mi>−</mi><mn>0.134</mn></mrow><annotation encoding="application/x-tex">
+\bar{g} = \left(1.5 \times 0.5\right)^{1/2} - 1 = \sqrt{0.75} - 1 = -0.134
+</annotation></semantics></math> Senet yılda ortalama %13.4 değer kaybetmiş. Denetim: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>100</mn><mo>×</mo><msup><mn>0.866</mn><mn>2</mn></msup><mo>=</mo><mn>75</mn></mrow><annotation encoding="application/x-tex">100 \times 0.866^2 = 75</annotation></semantics></math> TL.</p>
+</div>
+</section>
+<section id="bir-yatırımın-beş-yılı" class="slide level2">
+<h2>Bir yatırımın beş yılı</h2>
+<p>1000 TL ile alınan bir finansal varlığın yıl sonu değerleri:</p>
+<div class="columns">
+<div class="column" style="width:42%;">
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th style="text-align: center;">Yıl</th>
+<th style="text-align: right;">Değer (TL)</th>
+<th style="text-align: right;">Getiri</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">0</td>
+<td style="text-align: right;">1000.0</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">1</td>
+<td style="text-align: right;">1200.0</td>
+<td style="text-align: right;">%20</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">2</td>
+<td style="text-align: right;">1260.0</td>
+<td style="text-align: right;">%5</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">3</td>
+<td style="text-align: right;">1134.0</td>
+<td style="text-align: right;">−%10</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">4</td>
+<td style="text-align: right;">1304.1</td>
+<td style="text-align: right;">%15</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">5</td>
+<td style="text-align: right;">1238.9</td>
+<td style="text-align: right;">−%5</td>
+</tr>
+</tbody>
+</table>
+</div><div class="column" style="width:58%;">
+<div class="fragment">
+<p><strong>Aritmetik ortalama</strong> <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mrow><mn>0.20</mn><mo>+</mo><mn>0.05</mn><mo>−</mo><mn>0.10</mn><mo>+</mo><mn>0.15</mn><mo>−</mo><mn>0.05</mn></mrow><mn>5</mn></mfrac><mo>=</mo><mn>0.05</mn></mrow><annotation encoding="application/x-tex">
+\frac{0.20 + 0.05 - 0.10 + 0.15 - 0.05}{5} = 0.05
+</annotation></semantics></math></p>
+</div>
+<div class="fragment">
+<p><strong>Geometrik ortalama</strong> <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mrow><mo stretchy="false" form="prefix">(</mo><mn>1.20</mn><mo>×</mo><mn>1.05</mn><mo>×</mo><mn>0.90</mn><mo>×</mo><mn>1.15</mn><mo>×</mo><mn>0.95</mn><mo stretchy="false" form="postfix">)</mo></mrow><mrow><mn>1</mn><mi>/</mi><mn>5</mn></mrow></msup><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">
+\left(1.20 \times 1.05 \times 0.90 \times 1.15 \times 0.95\right)^{1/5} - 1
+</annotation></semantics></math> <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>=</mo><msup><mn>1.2389</mn><mrow><mn>1</mn><mi>/</mi><mn>5</mn></mrow></msup><mo>−</mo><mn>1</mn><mo>=</mo><mn>0.0438</mn></mrow><annotation encoding="application/x-tex">
+= 1.2389^{1/5} - 1 = 0.0438
+</annotation></semantics></math></p>
+</div>
+<div class="fragment">
+<p>Hangisi doğru? Her iki oranla 1000 TL’yi beş yıl büyütelim.</p>
+</div>
+</div></div>
+</section>
+<section id="hangi-oran-gerçek-değere-götürür" class="slide level2">
+<h2>Hangi oran gerçek değere götürür?</h2>
+
+<img data-src="h02-frekans-merkezi-egilim_files/figure-revealjs/unnamed-chunk-28-1.png" style="width:100.0%" class="r-stretch"><ul>
+<li>Geometrik ortalamayla büyüyen yol beşinci yılda gerçekleşen değere, <strong>1238.9 TL’ye</strong> tam olarak ulaşır.</li>
+<li>Aritmetik ortalama getiriyi olduğundan yüksek gösterir ve 1276.3 TL’ye götürür.</li>
+</ul>
+</section>
+<section id="oynaklık-farkı-büyütür-deneyin" class="slide level2">
+<h2>Oynaklık farkı büyütür <span class="deneyin">Deneyin</span></h2>
+<div class="ist-arac" id="arac-geometrik">
+  <div class="ist-kontroller"></div>
+  <div class="ist-cizim"></div>
+  <div class="sayilar"></div>
+</div>
+<script>
+(function () {
+  var A = IST.bul("arac-geometrik");
+  var m = 5, d = 20;    // yüzde: ortalama getiri ve oynaklık
+  var T = 10;
+  function yuzde(v, d) { return (v < -1e-9 ? "−%" : "%") + IST.yaz(Math.abs(v), d); }
+  function ciz() {
+    var yil = [], gercek = [], arit = [], geo = [], v = 100;
+    for (var t = 0; t <= T; t++) {
+      if (t > 0) v = v * (1 + (t % 2 === 1 ? m + d : m - d) / 100);
+      yil.push(t); gercek.push(v);
+    }
+    var a = m / 100;
+    var gg = Math.sqrt((1 + (m + d) / 100) * (1 + (m - d) / 100)) - 1;
+    for (var k = 0; k <= T; k++) {
+      arit.push(100 * Math.pow(1 + a, k));
+      geo.push(100 * Math.pow(1 + gg, k));
+    }
+    var hepsi = gercek.concat(arit, geo);
+    var ust = Math.max.apply(null, hepsi) * 1.08;
+    var alt = Math.floor(Math.min.apply(null, hepsi) * 0.9 / 10) * 10;
+    var g = IST.grafik(A.cizim, { gen: 1100, yuk: 320, x: [0, T], y: [alt, ust],
+                                   xTik: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], xEtiket: "Yıl →",
+                                   yEksen: true, yEtiket: "Değer (TL)", kenar: { sol: 70, sag: 30 } });
+    g.cizgi(yil, arit, { renk: "#d62728", kalinlik: 3, kesik: "10 7" });
+    g.cizgi(yil, geo, { renk: "#2ca02c", kalinlik: 3 });
+    g.cizgi(yil, gercek, { renk: "#333333", kalinlik: 2 });
+    gercek.forEach(function (y, i) { g.nokta(i, y, 5, "#333333"); });
+    IST.kartlar(A.sayilar, [
+      { etiket: "Aritmetik ortalama", deger: yuzde(100 * a, 1), sinif: "ortalama-renk" },
+      { etiket: "Geometrik ortalama", deger: yuzde(100 * gg, 2), sinif: "geometrik-renk" },
+      { etiket: "10 yıl sonra gerçek değer", deger: IST.yaz(gercek[T], 1) + " TL" },
+      { etiket: "Aritmetik ortalamayla", deger: IST.yaz(arit[T], 1) + " TL", sinif: "ortalama-renk" }
+    ]);
+  }
+  IST.kaydirici(A.kontrol, { etiket: "Ortalama getiri (%)", min: 0, max: 20, adim: 1, deger: m,
+                             degisince: function (v) { m = v; ciz(); } });
+  IST.kaydirici(A.kontrol, { etiket: "Oynaklık (%)", min: 0, max: 50, adim: 5, deger: d,
+                             degisince: function (v) { d = v; ciz(); } });
+  ciz();
+})();
+</script>
+<div class="not">
+<p>Getiri tek yıllarda ortalama + oynaklık, çift yıllarda ortalama − oynaklık. Siyah gerçekleşen değer, kırmızı kesikli aritmetik ortalamayla büyüme, yeşil geometrik ortalamayla büyüme.</p>
+</div>
+<aside class="notes">
+<p>Oynaklığı sıfıra indirin, iki ortalama ve üç çizgi çakışır. Oynaklık arttıkça aritmetik ortalama değişmez ama geometrik ortalama düşer ve gerçek değer aritmetik yolun giderek altında kalır. Yeşil çizgi siyah çizgiyi her iki yılda bir keser ve onuncu yılda gerçek değerle buluşur.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+<!-- Gerektirir: hane_ornek (b04-gorsel/_kategorik.qmd) -->
 </section>
 <section id="medyan" class="slide level2">
 <h2>Medyan</h2>
@@ -1073,7 +1417,7 @@ Cinsiyet Ailesiyle Yurtta Evde
 <section id="çarpık-dağılımda-ortalama-ve-medyan" class="slide level2">
 <h2>Çarpık dağılımda ortalama ve medyan</h2>
 
-<img data-src="h02-frekans-merkezi-egilim_files/figure-revealjs/unnamed-chunk-21-1.png" style="width:100.0%" class="r-stretch"><p><strong>Sağa çarpık</strong> dağılımda uzun sağ kuyruk ortalamayı <strong>yukarı çeker</strong>: ortalama &gt; medyan. Gelir istatistiklerinde bu yüzden medyan da raporlanır.</p>
+<img data-src="h02-frekans-merkezi-egilim_files/figure-revealjs/unnamed-chunk-29-1.png" style="width:100.0%" class="r-stretch"><p><strong>Sağa çarpık</strong> dağılımda uzun sağ kuyruk ortalamayı <strong>yukarı çeker</strong>: ortalama &gt; medyan. Gelir istatistiklerinde bu yüzden medyan da raporlanır.</p>
 </section>
 <section id="hangisini-ne-zaman-kullanmalı" class="slide level2">
 <h2>Hangisini ne zaman kullanmalı?</h2>
@@ -1110,6 +1454,11 @@ Cinsiyet Ailesiyle Yurtta Evde
 <td style="text-align: left;">Nominal (meslek, il)</td>
 <td style="text-align: left;"><strong>Mod</strong></td>
 <td style="text-align: left;">Sıralama ve toplama anlamsızdır</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Büyüme ve getiri oranları</td>
+<td style="text-align: left;"><strong>Geometrik ortalama</strong></td>
+<td style="text-align: left;">Oranlar çarpılarak birikir</td>
 </tr>
 </tbody>
 </table>
@@ -1245,12 +1594,14 @@ x_{(1)} \le x_{(2)} \le \cdots \le x_{(n)}
 <li>Bir sınıfta 30 öğrencinin memnuniyeti 1-5 ölçeğinde soruluyor. Hangi merkez ölçüleri kullanılabilir?</li>
 <li>Sıralı 15 gözlemde birinci kartil kaçıncı sıradaki değerdir?</li>
 <li>Bir sınava giren 200 öğrencinin notunun 90’ıncı yüzdeliği 78. Bu ne anlama gelir?</li>
+<li>Bir şirketin cirosu bir yıl %10 artıyor, ertesi yıl %10 azalıyor. İki yılın ortalama büyüme oranı kaçtır?</li>
 </ol>
 </div>
 <aside class="notes">
 <ol type="1">
 <li>Ortalama. 2) Medyan ve mod; ortalama anlamlı değil. 3) (15+1)·0.25 = 4, yani 4. sıradaki değer.</li>
 <li>Öğrencilerin yaklaşık %90’ı 78’in altında not almış.</li>
+<li>Geometrik ortalama: (1.10 · 0.90)^(1/2) − 1 = √0.99 − 1 ≈ −0.005, yani yılda yaklaşık %0.5 düşüş. Aritmetik ortalamanın verdiği %0 yanıltıcı.</li>
 </ol>
 <style type="text/css">
         span.MJX_Assistive_MathML {
@@ -1287,6 +1638,7 @@ x_{(1)} \le x_{(2)} \le \cdots \le x_{(n)}
   <script src="h02-frekans-merkezi-egilim_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
   <script src="h02-frekans-merkezi-egilim_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
   <script src="h02-frekans-merkezi-egilim_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="h02-frekans-merkezi-egilim_files/libs/revealjs/plugin/reveal-chalkboard/plugin.js"></script>
   <script src="h02-frekans-merkezi-egilim_files/libs/revealjs/plugin/quarto-support/support.js"></script>
   
 
@@ -1307,7 +1659,8 @@ x_{(1)} \le x_{(2)} \le \cdots \le x_{(n)}
 'autoAnimateDuration': 1,
 'autoAnimateUnmatched': true,
 'jumpToSlide': true,
-'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":false},
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleChalkboard(event)\"><kbd>b</kbd> Toggle Chalkboard</a></li>\n<li class=\"slide-tool-item\" data-item=\"6\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleNotesCanvas(event)\"><kbd>c</kbd> Toggle Notes Canvas</a></li>\n<li class=\"slide-tool-item\" data-item=\"7\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.downloadDrawings(event)\"><kbd>d</kbd> Download Drawings</a></li>\n<li class=\"slide-tool-item\" data-item=\"8\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'chalkboard': {"buttons":true,"theme":"whiteboard","boardmarkerWidth":3},
 'smaller': false,
  
         // Display controls in the bottom right corner
@@ -1461,7 +1814,7 @@ x_{(1)} \le x_{(2)} \le \cdots \le x_{(n)}
         margin: 5.0e-2,
 
         // reveal.js plugins
-        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, RevealChalkboard, QuartoSupport,
 
           RevealNotes,
           RevealSearch,
